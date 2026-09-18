@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python Zero to Code — 12 Lessons for Absolute Beginners</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFFFFF;--bg2:#F0F4FF;--bg3:#E4ECFF;--border:#C0CCEE;--text:#0A0E2A;--text2:#3A4570;--green:#007A3D;--green-dim:rgba(0,122,61,0.10);--green-bright:#00A84F;--blue:#0057CC;--blue-dim:rgba(0,87,204,0.10);--purple:#6A0DAD;--purple-dim:rgba(106,13,173,0.10);--yellow:#B85C00;--red:#CC0022;--sans:'Space Grotesk',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:18px}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:4px solid var(--blue);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:68px;box-shadow:0 2px 16px rgba(0,87,204,0.10)}
+.nav-brand{font-weight:700;font-size:1.3rem;color:var(--blue);display:flex;align-items:center;gap:.6rem}
+.nav-brand .dot{width:12px;height:12px;border-radius:50%;background:var(--green-bright);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero{min-height:100vh;display:flex;align-items:center;padding:90px 2rem 4rem;background:linear-gradient(135deg,#EEF4FF 0%,#F8FFFA 50%,#FFF8EE 100%)}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;text-align:center}
+.hero-tag{display:inline-flex;align-items:center;gap:.6rem;font-size:.95rem;font-family:var(--mono);color:var(--green);border:2px solid var(--green);padding:.4rem 1rem;border-radius:30px;margin-bottom:1.8rem;background:var(--green-dim);font-weight:600}
+.hero h1{font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.05;font-weight:700;letter-spacing:-.03em;margin-bottom:1.2rem;color:var(--text)}
+.hero h1 em{color:var(--blue);font-style:normal}
+.hero-sub{color:var(--text2);font-size:1.15rem;margin-bottom:2.5rem;max-width:680px;margin-left:auto;margin-right:auto}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-bottom:3rem;flex-wrap:wrap}
+.stat-num{font-family:var(--mono);font-size:2rem;font-weight:700;color:var(--blue);display:block}
+.stat-label{font-size:.9rem;color:var(--text2)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 2rem}
+.section-head{padding:4rem 0 2rem;text-align:center}
+.section-head h2{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+.section-head p{color:var(--text2);margin-top:.6rem;font-size:1rem}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;padding-bottom:5rem}
+.lesson-card{background:#fff;border:2px solid var(--border);border-radius:12px;padding:1.4rem;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text);display:block;box-shadow:0 2px 8px rgba(0,0,0,0.06);position:relative}
+.lesson-card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,87,204,0.14)}
+.lesson-card.done-card{border-color:var(--green);background:linear-gradient(135deg,#F0FFF6,#fff)}
+.done-badge{position:absolute;top:.8rem;right:.8rem;background:var(--green);color:#fff;font-family:var(--mono);font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:700}
+.lc-num{font-family:var(--mono);font-size:.78rem;color:var(--blue);font-weight:700;margin-bottom:.6rem;letter-spacing:.06em}
+.lc-title{font-weight:700;font-size:1.05rem;margin-bottom:.4rem;color:var(--text)}
+.lc-desc{font-size:.9rem;color:var(--text2);line-height:1.5}
+.lc-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+.tag{font-size:.72rem;font-family:var(--mono);padding:.18rem .5rem;border-radius:5px;background:var(--bg3);color:var(--blue);border:1px solid var(--border);font-weight:600}
+.prog-section{background:var(--bg2);padding:2rem;border-radius:16px;margin-bottom:2rem;text-align:center}
+.prog-section h3{font-size:1.1rem;font-weight:700;margin-bottom:.8rem;color:var(--text)}
+.prog-bar{height:10px;background:var(--border);border-radius:5px;max-width:500px;margin:0 auto .6rem}
+.prog-fill{height:100%;background:var(--green-bright);border-radius:5px;transition:width .5s}
+.prog-text{font-family:var(--mono);font-size:.9rem;color:var(--text2)}
+footer{background:var(--text);color:#99AACC;text-align:center;padding:2rem;font-size:.85rem;margin-top:4rem}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand"><div class="dot"></div>Python Zero to Code</div>
+  <span style="font-family:var(--mono);font-size:.85rem;color:var(--text2)">12 Lessons · Interactive</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">🐍 No installation needed — runs in your browser</div>
+    <h1>Learn Python<br><em>from Zero to Code</em></h1>
+    <p class="hero-sub">12 hands-on lessons. Write real Python, see real output, right here in the page. No setup. No confusion. Just code.</p>
+    <div class="hero-stats">
+      <div><span class="stat-num">12</span><span class="stat-label">Lessons</span></div>
+      <div><span class="stat-num">40+</span><span class="stat-label">Live Editors</span></div>
+      <div><span class="stat-num">36</span><span class="stat-label">Quiz Questions</span></div>
+      <div><span class="stat-num">0</span><span class="stat-label">Install Required</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="prog-section">
+    <h3>Your Progress</h3>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-text" id="progText">0 of 12 lessons complete</div>
+  </div>
+
+  <div class="section-head">
+    <h2>All 12 Lessons</h2>
+    <p>Click any lesson to start. Each one opens on its own page with live editors and a quick quiz.</p>
+  </div>
+
+  <div class="lesson-grid">
+    <a class="lesson-card" href="lesson01.html" id="card1">
+      <div class="lc-num">LESSON 01</div>
+      <div class="lc-title">Install &amp; Hello World</div>
+      <div class="lc-desc">What Python is, how it runs, and your first ever print().</div>
+      <div class="lc-tags"><span class="tag">print()</span><span class="tag">comments</span><span class="tag">NameError</span></div>
+    </a>
+    <a class="lesson-card" href="lesson02.html" id="card2">
+      <div class="lc-num">LESSON 02</div>
+      <div class="lc-title">Variables &amp; Numbers</div>
+      <div class="lc-desc">Store values, do arithmetic, understand int vs float.</div>
+      <div class="lc-tags"><span class="tag">int</span><span class="tag">float</span><span class="tag">operators</span></div>
+    </a>
+    <a class="lesson-card" href="lesson03.html" id="card3">
+      <div class="lc-num">LESSON 03</div>
+      <div class="lc-title">Text &amp; f-strings</div>
+      <div class="lc-desc">Build sentences from variables. Format numbers. String methods.</div>
+      <div class="lc-tags"><span class="tag">f-string</span><span class="tag">.upper()</span><span class="tag">.strip()</span></div>
+    </a>
+    <a class="lesson-card" href="lesson04.html" id="card4">
+      <div class="lc-num">LESSON 04</div>
+      <div class="lc-title">User Input</div>
+      <div class="lc-desc">Your programs take live input from the user.</div>
+      <div class="lc-tags"><span class="tag">input()</span><span class="tag">int()</span><span class="tag">float()</span></div>
+    </a>
+    <a class="lesson-card" href="lesson05.html" id="card5">
+      <div class="lc-num">LESSON 05</div>
+      <div class="lc-title">Decisions (if)</div>
+      <div class="lc-desc">Programs that branch. Do different things in different situations.</div>
+      <div class="lc-tags"><span class="tag">if</span><span class="tag">elif</span><span class="tag">else</span></div>
+    </a>
+    <a class="lesson-card" href="lesson06.html" id="card6">
+      <div class="lc-num">LESSON 06</div>
+      <div class="lc-title">Loops</div>
+      <div class="lc-desc">Repeat work without repeating code. for and while loops.</div>
+      <div class="lc-tags"><span class="tag">for</span><span class="tag">while</span><span class="tag">range()</span></div>
+    </a>
+    <a class="lesson-card" href="lesson07.html" id="card7">
+      <div class="lc-num">LESSON 07</div>
+      <div class="lc-title">Lists</div>
+      <div class="lc-desc">Store many things in one place. Sort, slice, loop.</div>
+      <div class="lc-tags"><span class="tag">list</span><span class="tag">.append()</span><span class="tag">len()</span></div>
+    </a>
+    <a class="lesson-card" href="lesson08.html" id="card8">
+      <div class="lc-num">LESSON 08</div>
+      <div class="lc-title">Dictionaries</div>
+      <div class="lc-desc">Look things up by name. Like a real dictionary, but faster.</div>
+      <div class="lc-tags"><span class="tag">dict</span><span class="tag">.get()</span><span class="tag">.items()</span></div>
+    </a>
+    <a class="lesson-card" href="lesson09.html" id="card9">
+      <div class="lc-num">LESSON 09</div>
+      <div class="lc-title">Functions</div>
+      <div class="lc-desc">Package your code. Write once, use anywhere.</div>
+      <div class="lc-tags"><span class="tag">def</span><span class="tag">return</span><span class="tag">parameters</span></div>
+    </a>
+    <a class="lesson-card" href="lesson10.html" id="card10">
+      <div class="lc-num">LESSON 10</div>
+      <div class="lc-title">Errors &amp; Handling</div>
+      <div class="lc-desc">Stop being afraid of red text. Read it, handle it.</div>
+      <div class="lc-tags"><span class="tag">try</span><span class="tag">except</span><span class="tag">ValueError</span></div>
+    </a>
+    <a class="lesson-card" href="lesson11.html" id="card11">
+      <div class="lc-num">LESSON 11</div>
+      <div class="lc-title">Files</div>
+      <div class="lc-desc">Read and write files. Make data survive the program.</div>
+      <div class="lc-tags"><span class="tag">open()</span><span class="tag">with</span><span class="tag">.write()</span></div>
+    </a>
+    <a class="lesson-card" href="lesson12.html" id="card12">
+      <div class="lc-num">LESSON 12</div>
+      <div class="lc-title">Modules &amp; Standard Library</div>
+      <div class="lc-desc">Python's built-in superpowers. Random, math, dates, JSON.</div>
+      <div class="lc-tags"><span class="tag">import</span><span class="tag">random</span><span class="tag">datetime</span></div>
+    </a>
+  </div>
+</div>
+
+<footer>Python Zero to Code — 12 lessons for absolute beginners · Live Python powered by Pyodide · Free to use and teach from</footer>
+
+<script>
+var KEY = "pzc-progress-v2";
+var progress = {};
+try { var s = localStorage.getItem(KEY); if(s) progress = JSON.parse(s); } catch(e) {}
+var count = 0;
+for(var i=1;i<=12;i++){
+  if(progress[String(i)]){
+    count++;
+    var card = document.getElementById("card"+i);
+    if(card){
+      card.classList.add("done-card");
+      var badge = document.createElement("div");
+      badge.className = "done-badge";
+      badge.textContent = "✓ Done";
+      card.appendChild(badge);
+    }
+  }
+}
+var fill = document.getElementById("progFill");
+var txt = document.getElementById("progText");
+if(fill) fill.style.width = (count/12*100)+"%";
+if(txt) txt.textContent = count+" of 12 lessons complete";
+</script>
+</body>
+</html>

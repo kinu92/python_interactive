@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFFFFF;--bg2:#F0F4FF;--bg3:#E4ECFF;--border:#C0CCEE;--text:#0A0E2A;--text2:#3A4570;--green:#007A3D;--green-dim:rgba(0,122,61,0.10);--green-bright:#00A84F;--blue:#0057CC;--blue-dim:rgba(0,87,204,0.10);--purple:#6A0DAD;--red:#CC0022;--red-dim:rgba(204,0,34,0.08);--yellow:#B85C00;--orange:#CC4400;--sans:'Space Grotesk',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px;font-size:18px}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:4px solid var(--blue);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:68px;box-shadow:0 2px 16px rgba(0,87,204,0.10);gap:1rem}
+.nav-brand{font-weight:700;font-size:1.1rem;color:var(--blue);display:flex;align-items:center;gap:.5rem;white-space:nowrap}
+.nav-brand .dot{width:10px;height:10px;border-radius:50%;background:var(--green-bright);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.nav-center{font-weight:600;font-size:1rem;color:var(--text);flex:1;text-align:center}
+.nav-pyodide{font-family:var(--mono);font-size:.72rem;padding:.28rem .7rem;border-radius:20px;border:2px solid var(--border);color:var(--text2);background:var(--bg2);white-space:nowrap}
+.nav-pyodide.ready{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+.nav-pyodide.loading{border-color:var(--yellow);color:var(--yellow)}
+.page{max-width:860px;margin:0 auto;padding:88px 2rem 5rem}
+.lesson-header{margin-bottom:2rem}
+.lesson-num-badge{display:inline-block;font-family:var(--mono);font-size:.85rem;font-weight:700;background:var(--blue);color:#fff;border-radius:8px;padding:.3rem .8rem;margin-bottom:.8rem}
+.lesson-header h1{font-size:clamp(1.9rem,5vw,3rem);font-weight:700;letter-spacing:-.03em;color:var(--text);line-height:1.1;margin-bottom:.6rem}
+.goal{background:#EEF6FF;border-left:5px solid var(--blue);padding:1rem 1.3rem;border-radius:0 10px 10px 0;font-size:1rem;color:var(--text2);margin:1rem 0 1.6rem}
+.goal strong{color:var(--blue)}
+h3{font-size:1.3rem;font-weight:700;margin:2rem 0 .7rem;color:var(--purple)}
+p{margin-bottom:1rem;color:var(--text2);font-size:1rem}
+p strong{color:var(--text)}
+ul,ol{padding-left:1.5rem;margin-bottom:1rem;color:var(--text2);font-size:1rem}
+li{margin-bottom:.4rem}
+code.ic{background:var(--bg3);padding:.1rem .4rem;border-radius:4px;font-family:var(--mono);font-size:.88rem;color:var(--blue)}
+.gotcha{background:#FFF8EE;border-left:5px solid var(--yellow);border-radius:0 10px 10px 0;padding:1rem 1.3rem;margin:1.2rem 0}
+.gotcha-label{font-weight:700;color:var(--yellow);margin-bottom:.4rem}
+table.op-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem}
+table.op-table th{background:var(--bg3);color:var(--blue);font-weight:700;padding:.6rem .8rem;text-align:left;border:1px solid var(--border)}
+table.op-table td{padding:.55rem .8rem;border:1px solid var(--border);color:var(--text2)}
+table.op-table td code{font-family:var(--mono);color:var(--blue)}
+.analogy{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.2rem 0}
+.analogy-side{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:1.2rem}
+.analogy-side h4{font-size:.9rem;font-weight:700;color:var(--blue);margin-bottom:.8rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.analogy-item{display:flex;align-items:center;gap:.6rem;padding:.3rem 0;font-size:.9rem;color:var(--text2)}
+.analogy-icon{font-size:1.2rem}
+.anatomy{background:#12172A;border-radius:12px;padding:1.5rem;margin:1.2rem 0;overflow-x:auto}
+.anatomy-title{font-family:var(--mono);font-size:.78rem;color:#5A7ABB;margin-bottom:1.2rem;letter-spacing:.06em;text-transform:uppercase}
+.ann{position:relative;display:inline-block}
+.ann-label{position:absolute;top:2.2em;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.68rem;color:#5A7ABB;text-align:center;white-space:nowrap;border-top:1px dashed #3A4A7A;padding-top:.3rem}
+.ann-row{display:flex;gap:1.5rem;margin-top:2.8rem;flex-wrap:wrap}
+.ann-key{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.8rem}
+.ann-dot{width:10px;height:10px;border-radius:50%}
+.exercise{background:var(--purple-dim,rgba(106,13,173,0.06));border:2px solid var(--purple);border-radius:12px;padding:1.2rem 1.5rem;margin:1.2rem 0}
+.ex-label{font-weight:700;color:var(--purple);margin-bottom:.6rem;font-size:.9rem}
+.ex-tasks{padding-left:1.3rem;color:var(--text2);font-size:.95rem}
+.ex-tasks li{margin-bottom:.5rem}
+/* LIVE EDITOR */
+.live-editor{margin:1.4rem 0;border:2px solid var(--green);border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(0,122,61,0.10)}
+.live-header{background:#0D1A0F;border-bottom:1px solid #1A3020;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between}
+.live-label{font-family:var(--mono);font-size:.78rem;color:#66DDAA;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.live-label::before{content:'▶';color:#00FF88;font-size:.65rem}
+.live-actions{display:flex;gap:.5rem;align-items:center}
+.live-run-btn{font-family:var(--mono);font-size:.82rem;background:#00A84F;color:#fff;border:none;padding:.3rem 1rem;border-radius:6px;cursor:pointer;font-weight:700;transition:all .15s;display:flex;align-items:center;gap:.35rem}
+.live-run-btn:hover{background:#007A3D;transform:translateY(-1px)}
+.live-run-btn:disabled{background:#1A3020;color:#4A7A5A;cursor:not-allowed}
+.live-run-btn .spin{display:none;width:11px;height:11px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+.live-run-btn.running .spin{display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-clear-btn{font-family:var(--mono);font-size:.74rem;background:transparent;color:#5A7A6A;border:1px solid #2A4030;padding:.22rem .6rem;border-radius:5px;cursor:pointer}
+.live-clear-btn:hover{color:#66DDAA;border-color:#66DDAA}
+.live-textarea{width:100%;background:#0D1A0F;color:#E0FFE8;font-family:var(--mono);font-size:.88rem;line-height:1.9;padding:1.1rem 1.3rem;border:none;outline:none;resize:vertical;min-height:100px;tab-size:4}
+.live-textarea::placeholder{color:#2A4A30}
+.live-output-area{border-top:1px solid #1A3020}
+.live-output-label{background:#071008;font-family:var(--mono);font-size:.68rem;color:#4A8A5A;padding:.35rem 1.1rem;letter-spacing:.1em;font-weight:700;text-transform:uppercase}
+.live-output{padding:.9rem 1.3rem;font-family:var(--mono);font-size:.85rem;line-height:1.9;min-height:36px;background:#091210;color:#66DDAA;white-space:pre-wrap;word-break:break-word}
+.live-output.has-error{color:#FF6688}
+.live-output.empty-state{color:#2A4A30;font-style:italic}
+.live-hint{font-size:.72rem;font-family:var(--mono);color:#3A5A4A;padding:.25rem 1.1rem .4rem;background:#091210}
+.input-prompt-row{display:flex;align-items:center;gap:.5rem;padding:.4rem 1.1rem;background:#091210;border-top:1px solid #1A3020}
+.input-field{background:transparent;border:none;border-bottom:1px solid #3A5A4A;color:#E0FFE8;font-family:var(--mono);font-size:.85rem;outline:none;flex:1;padding:.1rem .2rem;min-width:140px}
+.input-submit-btn{font-family:var(--mono);font-size:.74rem;background:#0057CC;color:#fff;border:none;padding:.2rem .55rem;border-radius:4px;cursor:pointer}
+/* QUIZ */
+.quiz-section{margin-top:3rem;background:linear-gradient(135deg,#F5F0FF,#EEF4FF);border:2px solid var(--purple);border-radius:16px;padding:2rem;overflow:hidden}
+.quiz-title{font-family:var(--mono);font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);font-weight:700;margin-bottom:.4rem}
+.quiz-section h2{font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.quiz-section > p{font-size:.92rem;color:var(--text2);margin-bottom:1.5rem}
+.quiz-q{background:#fff;border:2px solid var(--border);border-radius:10px;padding:1.2rem 1.4rem;margin-bottom:1rem;transition:border-color .2s}
+.quiz-q.correct{border-color:var(--green);background:#F0FFF6}
+.quiz-q.wrong{border-color:var(--red);background:#FFF0F2}
+.quiz-q-text{font-weight:600;color:var(--text);margin-bottom:.9rem;font-size:.97rem}
+.quiz-options{display:flex;flex-direction:column;gap:.5rem}
+.quiz-option{display:flex;align-items:flex-start;gap:.7rem;padding:.55rem .8rem;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;background:#fff;font-size:.92rem;color:var(--text2)}
+.quiz-option:hover:not(.selected){border-color:var(--blue);background:var(--blue-dim);color:var(--blue)}
+.quiz-option.selected{border-color:var(--blue);background:var(--blue-dim);font-weight:600;color:var(--text)}
+.quiz-option.correct-opt{border-color:var(--green)!important;background:var(--green-dim)!important;color:var(--green)!important;font-weight:700}
+.quiz-option.wrong-opt{border-color:var(--red)!important;background:var(--red-dim)!important;color:var(--red)!important}
+.quiz-feedback{margin-top:.7rem;font-size:.88rem;font-weight:600;display:none;padding:.5rem .8rem;border-radius:6px}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:var(--green-dim);color:var(--green)}
+.quiz-feedback.bad{background:var(--red-dim);color:var(--red)}
+.quiz-score{margin-top:1.5rem;text-align:center;font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--purple);display:none}
+.quiz-score.show{display:block}
+/* DONE + NAV */
+.done-toggle{margin:2rem 0 1rem;display:flex;align-items:center;gap:.7rem}
+.done-toggle input{width:20px;height:20px;cursor:pointer;accent-color:var(--green)}
+.done-toggle label{font-weight:600;cursor:pointer;color:var(--text2)}
+.lesson-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem;padding-top:2rem;border-top:2px solid var(--border);flex-wrap:wrap;gap:1rem}
+.nav-btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;padding:.7rem 1.4rem;border-radius:8px;border:2px solid var(--blue);color:var(--blue);font-size:.95rem;transition:all .2s}
+.nav-btn:hover{background:var(--blue);color:#fff;text-decoration:none}
+.nav-btn.primary{background:var(--blue);color:#fff}
+.nav-btn.primary:hover{background:#003FAA}
+.home-btn{color:var(--text2);border-color:var(--border);font-size:.85rem}
+.home-btn:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-dim)}
+footer{background:var(--text);color:#99AACC;text-align:center;padding:1.8rem;font-size:.82rem;margin-top:4rem}
+@media(max-width:700px){.analogy{grid-template-columns:1fr}.lesson-header h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<title>Lesson 05: Decisions (if) — Python Zero to Code</title>
+<nav class="nav">
+  <a class="nav-brand" href="index.html"><div class="dot"></div>Python Zero to Code</a>
+  <div class="nav-center">Lesson 05 / 12 — Decisions (if)</div>
+  <span class="nav-pyodide loading" id="pyodideStatus">⏳ Loading Python…</span>
+</nav>
+<div class="page">
+<div class="lesson-header">
+  <div class="lesson-num-badge">LESSON 05</div>
+  <h1>Making Decisions with if</h1>
+</div>
+<p class="goal"><strong>By the end of this lesson:</strong> Your programs can branch — doing different things depending on the situation.</p>
+<div class="live-editor" data-editor="5a">
+  <div class="live-header">
+    <span class="live-label">grading.py</span>
+    <div class="live-actions">
+      <button class="live-clear-btn" onclick="clearOutput(this)">Clear</button>
+      <button class="live-run-btn" onclick="runCode(this)"><span class="spin"></span>▶ Run</button>
+    </div>
+  </div>
+  <textarea class="live-textarea" rows="13" spellcheck="false">score = int(input("Enter score (0-100): "))
+
+if score >= 90:
+    print("Grade: A — Excellent!")
+elif score >= 75:
+    print("Grade: B — Well done!")
+elif score >= 60:
+    print("Grade: C — Passed.")
+elif score >= 35:
+    print("Grade: D — Barely passed.")
+else:
+    print("Grade: F — Fail.")</textarea>
+  <div class="live-output-area">
+    <div class="live-output-label">OUTPUT</div>
+    <div class="live-output empty-state">Press ▶ Run to see output</div>
+    <div class="live-hint">Enter a score like 85 when prompted</div>
+  </div>
+</div><div class="live-editor" data-editor="5b">
+  <div class="live-header">
+    <span class="live-label">logic.py — and / or / in</span>
+    <div class="live-actions">
+      <button class="live-clear-btn" onclick="clearOutput(this)">Clear</button>
+      <button class="live-run-btn" onclick="runCode(this)"><span class="spin"></span>▶ Run</button>
+    </div>
+  </div>
+  <textarea class="live-textarea" rows="13" spellcheck="false">age = 20
+has_id = True
+
+if age >= 18 and has_id:
+    print("Entry allowed")
+else:
+    print("Entry denied")
+
+# 'in' checks membership
+day = "Saturday"
+if day in ["Saturday", "Sunday"]:
+    print("Weekend!")</textarea>
+  <div class="live-output-area">
+    <div class="live-output-label">OUTPUT</div>
+    <div class="live-output empty-state">Press ▶ Run to see output</div>
+    <div class="live-hint">Try: change has_id to False, or age to 16</div>
+  </div>
+</div><div class="live-editor" data-editor="5c">
+  <div class="live-header">
+    <span class="live-label">your_turn.py</span>
+    <div class="live-actions">
+      <button class="live-clear-btn" onclick="clearOutput(this)">Clear</button>
+      <button class="live-run-btn" onclick="runCode(this)"><span class="spin"></span>▶ Run</button>
+    </div>
+  </div>
+  <textarea class="live-textarea" rows="10" spellcheck="false"># Write a program that checks if a number is positive, negative, or zero
+n = int(input("Enter any number: "))
+
+if n > 0:
+    print("Positive")
+elif n < 0:
+    print("Negative")
+else:
+    print("Zero")</textarea>
+  <div class="live-output-area">
+    <div class="live-output-label">OUTPUT</div>
+    <div class="live-output empty-state">Press ▶ Run to see output</div>
+    
+  </div>
+</div>
+<div class="quiz-section">
+  <div class="quiz-title">Quick Quiz</div>
+  <h2>Test Yourself — Lesson 05</h2>
+  <p>Pick the best answer for each question. Instant feedback below each one.</p>
+  <div class="quiz-q" id="q5_0">
+    <div class="quiz-q-text">Q1. What keyword do you use to add a second condition?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" data-val="opt0" onclick="quizSelect(this,'opt1',"Correct! elif is Python's way of saying 'else if' — check another condition.",document.getElementById('q5_0_fb'),document.getElementById('q5_0'))">else if</div>
+      <div class="quiz-option" data-val="opt1" onclick="quizSelect(this,'opt1',"Correct! elif is Python's way of saying 'else if' — check another condition.",document.getElementById('q5_0_fb'),document.getElementById('q5_0'))">elif</div>
+      <div class="quiz-option" data-val="opt2" onclick="quizSelect(this,'opt1',"Correct! elif is Python's way of saying 'else if' — check another condition.",document.getElementById('q5_0_fb'),document.getElementById('q5_0'))">elseif</div>
+      <div class="quiz-option" data-val="opt3" onclick="quizSelect(this,'opt1',"Correct! elif is Python's way of saying 'else if' — check another condition.",document.getElementById('q5_0_fb'),document.getElementById('q5_0'))">else</div>
+    </div>
+    <div class="quiz-feedback" id="q5_0_fb"></div>
+  </div>
+  <div class="quiz-q" id="q5_1">
+    <div class="quiz-q-text">Q2. What does 'and' mean in Python?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" data-val="opt0" onclick="quizSelect(this,'opt0',"Correct! 'and' means BOTH sides must be True for the overall condition to pass.",document.getElementById('q5_1_fb'),document.getElementById('q5_1'))">Both conditions must be True</div>
+      <div class="quiz-option" data-val="opt1" onclick="quizSelect(this,'opt0',"Correct! 'and' means BOTH sides must be True for the overall condition to pass.",document.getElementById('q5_1_fb'),document.getElementById('q5_1'))">At least one must be True</div>
+      <div class="quiz-option" data-val="opt2" onclick="quizSelect(this,'opt0',"Correct! 'and' means BOTH sides must be True for the overall condition to pass.",document.getElementById('q5_1_fb'),document.getElementById('q5_1'))">Neither is True</div>
+      <div class="quiz-option" data-val="opt3" onclick="quizSelect(this,'opt0',"Correct! 'and' means BOTH sides must be True for the overall condition to pass.",document.getElementById('q5_1_fb'),document.getElementById('q5_1'))">Not True</div>
+    </div>
+    <div class="quiz-feedback" id="q5_1_fb"></div>
+  </div>
+  <div class="quiz-q" id="q5_2">
+    <div class="quiz-q-text">Q3. If score = 80, which prints with if score >= 90: ... elif score >= 75: ...?</div>
+    <div class="quiz-options">
+      <div class="quiz-option" data-val="opt0" onclick="quizSelect(this,'opt1','Correct! 80 is not >= 90, but it IS >= 75, so the elif runs and prints Grade B.',document.getElementById('q5_2_fb'),document.getElementById('q5_2'))">Grade A</div>
+      <div class="quiz-option" data-val="opt1" onclick="quizSelect(this,'opt1','Correct! 80 is not >= 90, but it IS >= 75, so the elif runs and prints Grade B.',document.getElementById('q5_2_fb'),document.getElementById('q5_2'))">Grade B</div>
+      <div class="quiz-option" data-val="opt2" onclick="quizSelect(this,'opt1','Correct! 80 is not >= 90, but it IS >= 75, so the elif runs and prints Grade B.',document.getElementById('q5_2_fb'),document.getElementById('q5_2'))">Nothing</div>
+      <div class="quiz-option" data-val="opt3" onclick="quizSelect(this,'opt1','Correct! 80 is not >= 90, but it IS >= 75, so the elif runs and prints Grade B.',document.getElementById('q5_2_fb'),document.getElementById('q5_2'))">Error</div>
+    </div>
+    <div class="quiz-feedback" id="q5_2_fb"></div>
+  </div>
+  <div class="quiz-score" id="quizScore"></div>
+</div>
+<div class="done-toggle">
+  <input type="checkbox" id="done5" data-l="5" onchange="markDone(this)">
+  <label for="done5">Mark Lesson 05 complete ✓</label>
+</div><div class="lesson-nav">
+  <a class="nav-btn" href="lesson04.html">← Lesson 04</a>
+  <a class="nav-btn home-btn" href="index.html">⌂ All Lessons</a>
+  <a class="nav-btn primary" href="lesson06.html">Lesson 06 →</a>
+</div>
+</div>
+<footer>Python Zero to Code — 12 lessons for absolute beginners · Live Python powered by Pyodide · Free to use and teach from</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<script>
+"use strict";
+var pyodideReady=false,pyodideInstance=null,pyodideQueue=[];
+async function loadPyodideEngine(){
+  var s=document.getElementById("pyodideStatus");
+  try{
+    pyodideInstance=await loadPyodide();
+    pyodideReady=true;
+    s.textContent="✓ Python ready";s.className="nav-pyodide ready";
+    pyodideQueue.forEach(fn=>fn());pyodideQueue=[];
+  }catch(e){
+    s.textContent="⚠ Failed";s.style.borderColor="var(--red)";s.style.color="var(--red)";
+  }
+}
+loadPyodideEngine();
+
+async function runCode(btn){
+  var editor=btn.closest(".live-editor");
+  var ta=editor.querySelector(".live-textarea");
+  var outEl=editor.querySelector(".live-output");
+  var outArea=editor.querySelector(".live-output-area");
+  if(!pyodideReady){outEl.className="live-output has-error";outEl.textContent="⏳ Python still loading…";return;}
+  btn.disabled=true;btn.classList.add("running");
+  outEl.className="live-output";outEl.textContent="";
+  var code=ta.value,outputLines=[];
+  try{
+    pyodideInstance.runPython(`import sys,io\n_cap=io.StringIO()\nsys.stdout=_cap`);
+    var nm=(code.match(/input\s*\(/g)||[]).length;
+    if(nm>0){
+      var vals=[];
+      for(var i=0;i<nm;i++){
+        var v=await askInput(outArea,outEl,outputLines,i,nm);
+        if(v===null){outEl.className="live-output has-error";outEl.textContent=outputLines.join("\n")+"\n[Cancelled]";return;}
+        vals.push(v);
+      }
+      pyodideInstance.globals.set("_iv",vals);
+      pyodideInstance.runPython(`_ii=0\ndef _pi(p=""):\n global _ii\n v=_iv[_ii];_ii+=1;print(p+v);return v\nimport builtins;builtins.input=_pi`);
+    }
+    pyodideInstance.runPython(code);
+    var cap=pyodideInstance.runPython("_cap.getvalue()");
+    if(cap.trim()===""){outEl.className="live-output empty-state";outEl.textContent="(No output — add a print() to see something)";}
+    else{outEl.className="live-output";outEl.textContent=cap;}
+  }catch(err){
+    var m=String(err).replace(/File "<exec>", /g,"Line ");
+    outEl.className="live-output has-error";outEl.textContent="❌ Error:\n"+m;
+  }finally{
+    try{pyodideInstance.runPython("sys.stdout=sys.__stdout__");}catch(e){}
+    btn.disabled=false;btn.classList.remove("running");
+  }
+}
+function askInput(outArea,outEl,lines,idx,total){
+  return new Promise(res=>{
+    var row=document.createElement("div");row.className="input-prompt-row";
+    row.innerHTML=`<span style="color:#FFD080;font-family:var(--mono);font-size:.82rem">⌨ Input ${idx+1}/${total}: </span><input class="input-field" type="text" placeholder="type here and press Enter"><button class="input-submit-btn">Enter ↵</button>`;
+    outArea.appendChild(row);
+    var inp=row.querySelector("input"),btn=row.querySelector("button");
+    inp.focus();
+    function sub(){var v=inp.value;row.remove();res(v);}
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter")sub();if(e.key==="Escape"){row.remove();res(null);}});
+    btn.addEventListener("click",sub);
+  });
+}
+function clearOutput(btn){
+  var ed=btn.closest(".live-editor");
+  ed.querySelectorAll(".input-prompt-row").forEach(el=>el.remove());
+  var o=ed.querySelector(".live-output");
+  o.className="live-output empty-state";o.textContent="Press ▶ Run to see output";
+}
+// Progress
+var KEY="pzc-progress-v2",progress={};
+try{var s2=localStorage.getItem(KEY);if(s2)progress=JSON.parse(s2);}catch(e){}
+function markDone(box){
+  progress[box.getAttribute("data-l")]=box.checked;
+  try{localStorage.setItem(KEY,JSON.stringify(progress));}catch(e){}
+}
+document.querySelectorAll("input[data-l]").forEach(box=>{
+  if(progress[box.getAttribute("data-l")])box.checked=true;
+});
+// Tab key
+document.querySelectorAll(".live-textarea").forEach(ta=>{
+  ta.addEventListener("keydown",e=>{
+    if(e.key==="Tab"){e.preventDefault();var s=ta.selectionStart,n=ta.selectionEnd;ta.value=ta.value.substring(0,s)+"    "+ta.value.substring(n);ta.selectionStart=ta.selectionEnd=s+4;}
+  });
+});
+// Quiz
+function quizSelect(el,correct,feedback,feedbackEl,qEl){
+  if(qEl.classList.contains("correct")||qEl.classList.contains("wrong"))return;
+  el.classList.add("selected");
+  feedbackEl.classList.add("show");
+  if(el.dataset.val===correct){
+    el.classList.add("correct-opt");qEl.classList.add("correct");
+    feedbackEl.classList.add("ok");feedbackEl.innerHTML="✅ "+feedback;
+  }else{
+    el.classList.add("wrong-opt");qEl.classList.add("wrong");
+    feedbackEl.classList.add("bad");feedbackEl.innerHTML="❌ "+feedback;
+    qEl.querySelectorAll(".quiz-option").forEach(o=>{if(o.dataset.val===correct)o.classList.add("correct-opt");});
+  }
+  checkQuizDone();
+}
+function checkQuizDone(){
+  var qs=document.querySelectorAll(".quiz-q");
+  var done=Array.from(qs).every(q=>q.classList.contains("correct")||q.classList.contains("wrong"));
+  if(done){
+    var score=Array.from(qs).filter(q=>q.classList.contains("correct")).length;
+    var sc=document.getElementById("quizScore");
+    if(sc){sc.textContent="You scored "+score+"/"+qs.length+" — "+(score===qs.length?"Perfect! 🎉":score>=2?"Good job! 👍":"Keep practising! 💪");sc.classList.add("show");}
+  }
+}
+</script>
+</body>
+</html>
